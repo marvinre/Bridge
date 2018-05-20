@@ -1,4 +1,5 @@
 <?php
+include 'assets/includes/oauth2.php';
 include 'assets/includes/header.php';
 echo '
     <!-- HEADER -->
