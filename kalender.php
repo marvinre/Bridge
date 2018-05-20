@@ -3,7 +3,7 @@ include 'assets/includes/header.php';
 echo '
     <!-- HEADER -->
     <header>
-        <h2>Home</h2>
+        <h2>Kalender</h2>
     </header>
     ';
 include 'assets/includes/nav.php';
