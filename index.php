@@ -1,42 +1,42 @@
 <?php
-include 'assets/includes/auth/oauth2.php';
-include 'assets/includes/layout/header.php';
-echo '
-    <!-- HEADER -->
-    <header>
-        <h2>Home</h2>
-    </header>
-    ';
-include 'assets/includes/layout/nav.php';
+    require_once 'assets/basic/init.php';
+
+    if(!isset($_SESSION['access_token'])){
+        header('Location: login.php');
+        exit();
+    }
 ?>
 
 
-<?php
-if (isset($_SESSION['access_token']) && $_SESSION['access_token']) {
-    $client->setAccessToken($_SESSION['access_token']);
-    
-    //DRIVE Output
-    $drive = new Google_Service_Drive($client);
-    $files = $drive->files->listFiles(array())->getFiles();
-    echo json_encode($files);
-    
-    
-
-    
-} else {
-    $redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] . '/oauth2callback.php';
-    header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
-}
-
-?>
-
-
-
-
-
-
-
-<?php
-include 'assets/includes/layout/footer.php';
-
-?>
+<html>
+    <head>
+        <title>Logged In - Home</title>
+    </head>
+    <body>
+        <form action="logout.php">
+            <input type="submit" name="logout" value="Logout">
+        </form>
+        <?php 
+            echo $_SESSION['vorname'].'<br>';
+            echo $_SESSION['nachname'].'<br>';
+            echo $_SESSION['email'].'<br>';
+            echo '<img src="'.$_SESSION['profilbild'].'" style="width: 200px;">';
+        
+            //Dient dazu, den oben inkludierten Google Client {{$Google_Client}} den access_token zuzuweisen
+            if ($Google_Client->isAccessTokenExpired()) {
+                $Google_Client->refreshToken($_SESSION['refresh_token']);
+            }
+        ?>
+        <!-- NAVIGATION -->
+        <nav>
+            <h2>Navigation</h2>
+            <ul>
+                <li><a href="index.php">Home</a></li>
+                <li><a href="mail.php">Mail</a></li>
+                <li><a href="#">Kalender</a></li>
+                <li><a href="#">To Do</a></li>
+                <li><a href="#">Chat</a></li>
+            </ul>
+        </nav>
+    </body>
+</html>
